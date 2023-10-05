@@ -473,7 +473,12 @@ export class RpcProvider implements ProviderInterface {
     return this.fetchEndpoint('starknet_traceBlockTransactions', { block_hash: blockHash });
   }
 
-  public async waitForTransaction(txHash: string, options?: waitForTransactionOptions) {
+  public async waitForTransaction(
+    txHash: string,
+    options?: waitForTransactionOptions & {
+      hackyWaitForBlock?: boolean;
+    }
+  ) {
     let { retries } = this;
     let onchain = false;
     let isErrorState = false;
@@ -505,7 +510,10 @@ export class RpcProvider implements ProviderInterface {
           throw error;
         }
 
-        if (successStates.includes(executionStatus) || successStates.includes(finalityStatus)) {
+        if (
+          (successStates.includes(executionStatus) || successStates.includes(finalityStatus)) &&
+          (!options?.hackyWaitForBlock || txReceipt.block_number)
+        ) {
           onchain = true;
         } else if (errorStates.includes(executionStatus) || errorStates.includes(finalityStatus)) {
           const message = `${executionStatus}: ${finalityStatus}: ${txReceipt.revert_reason}`;
@@ -527,6 +535,7 @@ export class RpcProvider implements ProviderInterface {
       retries -= 1;
     }
 
+    // TODO: remove?
     await wait(retryInterval);
     return txReceipt;
   }

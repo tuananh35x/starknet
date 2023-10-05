@@ -1,4 +1,12 @@
-import { BlockNumber, CallData, GetBlockResponse, LibraryError, Provider, stark } from '../src';
+import {
+  BlockNumber,
+  CallData,
+  GetBlockResponse,
+  LibraryError,
+  Provider,
+  RpcProvider,
+  stark,
+} from '../src';
 import { toBigInt } from '../src/utils/num';
 import { encodeShortString } from '../src/utils/shortString';
 import {
@@ -36,6 +44,14 @@ describe('defaultProvider', () => {
     exampleBlock = await testProvider.getBlock('latest');
     exampleBlockHash = exampleBlock.block_hash;
     exampleBlockNumber = exampleBlock.block_number;
+
+    await ((testProvider as any).provider as RpcProvider).waitForTransaction(
+      exampleTransactionHash,
+      {
+        retryInterval: 20000,
+        hackyWaitForBlock: true,
+      }
+    );
   });
 
   describe('endpoints', () => {
