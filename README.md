@@ -79,3 +79,4 @@ This library would not be possible without these rockstars.
 Copyright (c) 2023 StarkWare
 
 Licensed under the [MIT license](https://github.com/starknet-io/starknet.js/blob/main/LICENSE).
+Commit 1 line
