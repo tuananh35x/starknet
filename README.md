@@ -82,3 +82,4 @@ Licensed under the [MIT license](https://github.com/starknet-io/starknet.js/blob
 Commit 1 line
 Commit 2 line
 Commit 3 line
+Commit 4 line
